@@ -7,6 +7,7 @@ import {
   Button,
   Easing
 } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import Dice7 from "../assets/game/dice/dice7.png";
 
@@ -418,8 +419,10 @@ var i=1;
         transform: [{rotate: spin}]
     
     }}>
+      <TouchableOpacity onPress={() => diceRoll()} >
       <Image ref={diceFaceFrame} source={require("../assets/game/dice/dice7.png")} />
-
+      </TouchableOpacity>
+      
       </Animated.View>
       {/* <Animated.View style={{
         
@@ -461,7 +464,7 @@ var i=1;
    
     <Button
         title="Press me"
-        onPress={() => diceRoll()}
+        
       />
         
    </View>

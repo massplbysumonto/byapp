@@ -6,34 +6,87 @@ import {
     Animated,
     Button,
     Easing,
-    Text
+    Text,
+    TouchableWithoutFeedback,
   } from 'react-native';
+  import { Link } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { handImage } from 'react-native-gesture-handler';
+
 
 
 
 const Login = () =>{
-    
+    const [isRotating, setRotation] = useState(true);
+    const [rotateValueHolder,setRotateHolder] =useState(new Animated.Value(isRotating ? 0 : 1));
+    const [lengthValueHolder,setlengthValueHolder] =useState(new Animated.Value(isRotating ? 0 : 1));
+    const [fadeAnim] = useState(new Animated.Value(isRotating ? 0 : 1));
     useEffect(()=>{
-        
-    });
-    let rotateValueHolder =  new Animated.Value(0);
-    let lengthValueHolder = new Animated.Value(0);
+       if(isRotating==true)
+       {
+        startImageRotateFunction();
+        stopincreaseLengthFunction();
+        fadeOutView()
+       }
+       else
+       {
+        stopImageRotateFunction();
+        increaseLengthFunction();
+        fadeInView();
+       }
+    },[isRotating]);
     
     const startImageRotateFunction = () =>{
-        rotateValueHolder.setValue(0);
+       
         Animated.timing(rotateValueHolder,{
             toValue: 1,
             duration: 6000,
             easing: Easing.linear,
             useNativeDriver: false 
-        }).start(()=> startImageRotateFunction())
+        }).start()
+
+    }
+    const stopImageRotateFunction = () =>{
+        Animated.timing(rotateValueHolder,{
+            toValue: 0,
+            duration: 6000,
+            easing: Easing.linear,
+            useNativeDriver: false 
+        }).stop();
     }
 
     const increaseLengthFunction = () =>{
-        lengthValueHolder.setValue(0);
         Animated.AnimatedInterpolation
         Animated.timing(lengthValueHolder,{
             toValue: 1,
+            duration: 6000,
+            easing: Easing.linear,
+            useNativeDriver: false 
+        }).start();
+    }
+    const fadeInView = () =>{
+        Animated.AnimatedInterpolation
+        Animated.timing(fadeAnim,{
+            toValue: 1,
+            duration: 6000,
+            easing: Easing.linear,
+            useNativeDriver: false 
+        }).start();
+    }
+    const fadeOutView = () =>{
+        Animated.AnimatedInterpolation
+        Animated.timing(fadeAnim,{
+            toValue: 0,
+            duration: 6000,
+            easing: Easing.linear,
+            useNativeDriver: false 
+        }).start();
+    }
+    const stopincreaseLengthFunction = () =>{
+        
+        Animated.AnimatedInterpolation
+        Animated.timing(lengthValueHolder,{
+            toValue: 0,
             duration: 6000,
             easing: Easing.linear,
             useNativeDriver: false 
@@ -51,7 +104,12 @@ const Login = () =>{
         width: lengthData
     }
 
+    const checkOnPress = ()=>{
+        setRotation(!isRotating);
+    }
+
     return(
+        <>
         <View style={styles.screen}>
            
            
@@ -60,13 +118,41 @@ const Login = () =>{
             ]}
             source={require("../assets/login/buddhiyoga_logo.png")}>
             </Animated.Image>
+            {/* </TouchableWithoutFeedback> */}
+            
             <Animated.View style={[styles.logoShadow,viewLengthStyle]}
             >
 
             </Animated.View>
-            <Button title='Google Login' onPress={increaseLengthFunction()}></Button>
-        </View>
+
+            <Text  style={{marginVertical:10}}onPress={checkOnPress} >Tap here</Text>
+            
+            {/* <Animated.View style={{marginTop:50,opacity:fadeAnim}}>
+                <Button title='Start New Game'></Button>
+                <Button title='About the Game'>About Us</Button>
+            </Animated.View> */}
+         <Animated.View style={{width: 300,marginVertical: 15,flexDirection: "row", justifyContent: "center",alignItems: 'center',opacity:fadeAnim,}}>
+        <Link to={{screen:"Game"}}>
+        <TouchableOpacity style={{backgroundColor: 'rgba(126,85,52,1)' ,width: 300,
+        borderRadius: 10,
+        height: 'auto',
+        paddingVertical: 12,
+        marginVertical: 0}}><Text style={{color: '#fff',lineheight: 30,fontWeight: '500', textAlign: 'center',paddingHorizontal:10}}>Start New Game</Text>
+        </TouchableOpacity>
+        </Link>
+        </Animated.View >
         
+     <Animated.View style={{width: 300,marginVertical: 15,flexDirection: "row", justifyContent: "center",alignItems: 'center',opacity:fadeAnim}}>
+          <TouchableOpacity style={{backgroundColor: 'rgba(126,85,52,1)' ,width: 300,
+        borderRadius: 10,
+        height: 'auto',
+        paddingVertical: 12,
+        marginVertical: 0}}><Text style={{color: '#fff',lineheight: 40,fontWeight: '500', textAlign: 'center',paddingHorizontal:10}}>About the Game</Text></TouchableOpacity>
+        </Animated.View >
+                
+            
+        </View>
+        </>
     )   
 }
 const styles = StyleSheet.create({

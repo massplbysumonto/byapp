@@ -23,6 +23,8 @@
  import Game from "./screens/game";
  import Home from "./screens/home";
  import Login from "./screens/login";
+ import { NavigationContainer } from '@react-navigation/native';
+ import { createNativeStackNavigator } from '@react-navigation/native-stack';
  import {
    Colors,
    DebugInstructions,
@@ -32,10 +34,19 @@
  } from 'react-native/Libraries/NewAppScreen';
  
 //  import HomeStack from './routes/homeStack';
-
+const Stack = createNativeStackNavigator();
 const App = (props)=> {
   return (
-    <Login />
+    <NavigationContainer>
+      <Stack.Navigator screenOptions={{headerShown:false}}>
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ title: 'Login' }}
+        />
+        <Stack.Screen name="Game" component={Game} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
  
