@@ -16,7 +16,7 @@ import { handImage } from 'react-native-gesture-handler';
 
 
 
-const Login = () =>{
+const login = () =>{
     const [isRotating, setRotation] = useState(true);
     const [rotateValueHolder,setRotateHolder] =useState(new Animated.Value(isRotating ? 0 : 1));
     const [lengthValueHolder,setlengthValueHolder] =useState(new Animated.Value(isRotating ? 0 : 1));
@@ -112,12 +112,13 @@ const Login = () =>{
         <>
         <View style={styles.screen}>
            
-           
+           <TouchableWithoutFeedback onPress={()=>checkOnPress()}>
            <Animated.Image  style={[styles.logo,
            {transform : [{rotate:RotateData}]}
             ]}
             source={require("../assets/login/buddhiyoga_logo.png")}>
             </Animated.Image>
+            </TouchableWithoutFeedback>
             {/* </TouchableWithoutFeedback> */}
             
             <Animated.View style={[styles.logoShadow,viewLengthStyle]}
@@ -125,7 +126,7 @@ const Login = () =>{
 
             </Animated.View>
 
-            <Text  style={{marginVertical:10}}onPress={checkOnPress} >Tap here</Text>
+            
             
             {/* <Animated.View style={{marginTop:50,opacity:fadeAnim}}>
                 <Button title='Start New Game'></Button>
@@ -142,13 +143,23 @@ const Login = () =>{
         </Link>
         </Animated.View >
         
-     <Animated.View style={{width: 300,marginVertical: 15,flexDirection: "row", justifyContent: "center",alignItems: 'center',opacity:fadeAnim}}>
+     {/* <Animated.View style={{width: 300,marginVertical: 15,flexDirection: "row", justifyContent: "center",alignItems: 'center',opacity:fadeAnim}}>
           <TouchableOpacity style={{backgroundColor: 'rgba(126,85,52,1)' ,width: 300,
         borderRadius: 10,
         height: 'auto',
         paddingVertical: 12,
         marginVertical: 0}}><Text style={{color: '#fff',lineheight: 40,fontWeight: '500', textAlign: 'center',paddingHorizontal:10}}>About the Game</Text></TouchableOpacity>
         </Animated.View >
+
+        <Animated.View style={{width: 300,marginVertical: 15,flexDirection: "row", justifyContent: "center",alignItems: 'center',opacity:fadeAnim}}>
+        <Link to={{screen:"Posts", params:{postId:15} }} >
+          <TouchableOpacity style={{backgroundColor: 'rgba(126,85,52,1)' ,width: 300,
+        borderRadius: 10,
+        height: 'auto',
+        paddingVertical: 12,
+        marginVertical: 0}}><Text style={{color: '#fff',lineheight: 40,fontWeight: '500', textAlign: 'center',paddingHorizontal:10}}>Posts</Text></TouchableOpacity>
+        </Link>
+        </Animated.View > */}
                 
             
         </View>
@@ -182,4 +193,4 @@ const styles = StyleSheet.create({
     
 
 });
-export default Login;
+export default login;

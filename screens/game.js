@@ -1,24 +1,30 @@
-import React,{useState,useRef} from 'react';
+import React,{useState,useRef, useCallback, useMemo} from 'react';
 import {
   StyleSheet,
   View,
   Image,
   Animated,
   Button,
-  Easing
+  Easing,
+  Text
 } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Link } from '@react-navigation/native';
+
 
 import Dice7 from "../assets/game/dice/dice7.png";
 
-const Game= () => {
+const game= ({navigation}) => {
+  
   const [running, setRunning] = useState(false);
   const [diceRollCount, setDiceRollCount] = useState(0);
   const [currentPoints, setCurrentPoints] = useState(0);
+  const postIdCurrent =useRef(551);
+
   const diceFace = useRef(Dice7);
   const diceFaceFrame = useRef(null);
 
-  const [, updateState]=useState();
+  // const [, updateState]=useState();
   
 /* Variables for the game  */  
   const position = new Animated.ValueXY({x:0,y:0});
@@ -39,7 +45,7 @@ const Game= () => {
   var iReverseTo = 0;
   var iRoll;
   var iOld_ReverseTo = 0;
-
+  var postId=0;
   //Player Variable
   
   var player = {
@@ -61,6 +67,13 @@ var dice = {
   iDiceCurrentRoll: 0,
   ispinValue:1
 };
+
+function changePage ()
+{
+  navigation.navigate('Posts',{postId:postIdCurrent.current})
+}
+
+
 
 //End of Dice Variable
 
@@ -206,6 +219,7 @@ var i=1;
        iOld_state = iCurrent_state;
        iCurrent_state = playerPositions[player.position].info.movement.state[(iRoll * 3) + iOld_state];
 
+
        console.log("Current State :: "+ iCurrent_state);
 
       if (iCurrent_state == 999) {
@@ -261,6 +275,13 @@ var i=1;
        dice.iDiceCurrentRoll=iDisplacement;
         movePawnNextCell();
      }
+
+
+     console.log("Target Position ::"+playerPositions[player.position].postID);
+     postIdCurrent.current=playerPositions[player.position].postID;
+     console.log(postIdCurrent);
+
+     
 
      console.log("SnakeBaseLadder :: "+iSnakeLadderBase);
 
@@ -377,12 +398,28 @@ var i=1;
     
 
   };
+
+  
   
   return (
     <View style={styles.container} >
       
-    <View style={styles.gameContainer}>
       
+      
+
+      
+    <View style={styles.gameContainer}>
+    
+    <TouchableOpacity style={{backgroundColor: 'rgba(126,85,52,1)' ,width: 300,
+        borderRadius: 10,
+        height: 'auto',
+        marginHorizontal: "11%"}}
+
+        onPress={()=>changePage()}
+        
+        ><Text style={{color: '#fff',lineheight: 40,fontWeight: '500', textAlign: 'center',paddingHorizontal:10}}>Get More Info</Text>
+        </TouchableOpacity>
+        
       <Image source={require('../assets/game/board.jpg')} style={{width:380,height:380,alignSelf:'center'}} />
       
       <Animated.View 
@@ -422,8 +459,11 @@ var i=1;
       <TouchableOpacity onPress={() => diceRoll()} >
       <Image ref={diceFaceFrame} source={require("../assets/game/dice/dice7.png")} />
       </TouchableOpacity>
+
+      
       
       </Animated.View>
+
       {/* <Animated.View style={{
         
         width:60,
@@ -457,15 +497,8 @@ var i=1;
       </View>
 
     </View>
-    
 
-    
 
-   
-    <Button
-        title="Press me"
-        
-      />
         
    </View>
   );
@@ -475,7 +508,8 @@ const styles = StyleSheet.create({
   container:{
     flex:1,
     alignContent:'center',
-    justifyContent:'center'
+    justifyContent:'center',
+    backgroundColor:'#cfc19f'
     
   },
   gameContainer:{
@@ -483,9 +517,10 @@ const styles = StyleSheet.create({
     alignContent:'center',
     justifyContent:'center',
     width:"100%",
-    height:"90%"
+    height:"90%",
+    backgroundColor:'#cfc19f'
   },
 
 });
 
-export default Game;
+export default game;

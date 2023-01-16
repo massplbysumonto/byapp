@@ -20,9 +20,10 @@
  
 //  import { createStackNavigator } from "react-navigation-stack";
 //  import { createAppContainer } from "react-navigation";
- import Game from "./screens/game";
- import Home from "./screens/home";
- import Login from "./screens/login";
+ import game from "./screens/game";
+ import home from "./screens/home";
+ import login from "./screens/login";
+ import Posts from "./screens/posts";
  import { NavigationContainer } from '@react-navigation/native';
  import { createNativeStackNavigator } from '@react-navigation/native-stack';
  import {
@@ -41,10 +42,11 @@ const App = (props)=> {
       <Stack.Navigator screenOptions={{headerShown:false}}>
         <Stack.Screen
           name="Login"
-          component={Login}
+          component={login}
           options={{ title: 'Login' }}
         />
-        <Stack.Screen name="Game" component={Game} />
+        <Stack.Screen name="Game" component={game} />
+        <Stack.Screen name="Posts" component={Posts} />
       </Stack.Navigator>
     </NavigationContainer>
   );
