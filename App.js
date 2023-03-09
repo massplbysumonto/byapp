@@ -11,6 +11,8 @@ import { Image } from 'react-native';
  import Game from "./screens/game";
  import Login from "./screens/login";
  import Posts from "./screens/posts";
+ import Contact from './screens/contact';
+ import Hamburger from './components/hamburger';
  import { NavigationContainer } from '@react-navigation/native';
  import { createNativeStackNavigator } from '@react-navigation/native-stack';
  import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -22,22 +24,24 @@ const App = (props)=> {
     
   function DrawerRoutes(){
     return(
-    <Drawer.Navigator useLegacyImplementation initialRouteName="Home" screenOptions={{
-      title: 'Home',
-      drawerIcon: ({focused, size}) => (
-       <Image
-       source={require('./assets/login/buddiyogaLogo.png')}></Image>
-      ),
-       headerShown:false
-   }}>
+    <Drawer.Navigator useLegacyImplementation initialRouteName="Home" 
+    screenOptions={{headerShown:true,
+      drawerStyle:{},
+      drawerItemStyle:{borderBottomWidth:1,width:"100%",marginTop:30,paddingTop:10, },
+       drawerType:'front',
+
+      }}>
       <Drawer.Screen name="Home" component={Game} />
-      <Drawer.Screen name="Home1" component={Posts}/>
-      {/* <Drawer.Screen name="ProfileManagement" component={Profile} /> get a physical board about contact registration acknowledgement*/}
+      <Drawer.Screen name="Profile" component={Game}/>
+      <Drawer.Screen name="About us" component={Game}/>
+      <Drawer.Screen name="Contact us" component={Contact}/>
     </Drawer.Navigator>
     )
   }
 
   return (
+    <>
+    
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown:false}}>
         <Stack.Screen
@@ -49,6 +53,7 @@ const App = (props)=> {
         <Stack.Screen name="Posts" component={Posts} />
       </Stack.Navigator>
     </NavigationContainer>
+    </>
   );
 };
  export default App;

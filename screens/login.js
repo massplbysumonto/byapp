@@ -22,7 +22,7 @@ const Login = () =>{
     const [lengthValueHolder,setlengthValueHolder] =useState(new Animated.Value(isRotating ? 0 : 1));
     const [fadeAnim] = useState(new Animated.Value(isRotating ? 0 : 1));
     useEffect(()=>{
-        console.log(isRotating)
+        // console.log(isRotating)
        if(isRotating==true)
        {
         startImageRotateFunction();
