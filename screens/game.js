@@ -414,7 +414,7 @@ const getPosts=(e)=>{
         
         width:40,
         height:40,
-        backgroundColor:"#DEB887",
+        backgroundColor:"rgba(88, 44, 36,1)",
         borderRadius:10,        
         
         
@@ -443,7 +443,7 @@ const styles = StyleSheet.create({
     flex:1,
     alignContent:'center',
     justifyContent:'center',
-    backgroundColor:'#cfc19f',
+    backgroundColor:'rgba(183,153,114,0.25)',
     position:'relative'
   },
   gameContainer:{

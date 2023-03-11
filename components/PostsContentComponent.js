@@ -22,7 +22,7 @@ const PostsContentComponent = (prop) => {
   };
   
   
-  console.log(prop);
+//   console.log(prop);
 	
 	return(
 		

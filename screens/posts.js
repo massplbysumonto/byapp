@@ -9,20 +9,19 @@ import {
   Card,
   ScrollView,
   Animated,
-  TouchableOpacity
+  TouchableOpacity,TouchableWithoutFeedback
 } from 'react-native';
 
 import PostsPictureComponent from '../components/PostsPictureComponent';
 import PostsContentComponent from '../components/PostsContentComponent';
 import {WP_URL_POST}  from '@env';
-import { Title,Divider } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Postsheader from '../components/postsheader';
+import BlockInformation from '../components/blockInformation';
 
 
-
-
-
-const Posts= (props) => {
-
+const Posts= (props,{navigation}) => {
+  console.log(props)
     const [postList, setPostList] = React.useState([]);
     const [postId,setPostId] = React.useState(props.route.params.postId);
     const slideUpValue= new Animated.Value(0);
@@ -99,12 +98,12 @@ const Posts= (props) => {
       };
 
     return (<>
-       
-       
-        {
             <View style={{backgroundColor:"#cfc19f"}}>
+              <Postsheader navigation={props.navigation}/>
+              
             {
             (postList.length>0) ?( 
+              <View>
                 <Animated.View
 
                 style={{
@@ -129,16 +128,17 @@ const Posts= (props) => {
               >
                 <SafeAreaView style={styles.cardViewOverAll}>
                     <ScrollView >
-                    <TouchableOpacity onPress={()=>handleBackButtonClick()} >
-                            <Text style={{margin:10}} >
-                                Go Back
-                            </Text>
-                    </TouchableOpacity>
                         <PostsPictureComponent postId={15} subTitle={postList[0].excerpt.rendered} title={postList[0].title.rendered} imageUrl={postList[0].better_featured_image.media_details.sizes.large.source_url} />
                         <PostsContentComponent content={postList[0].content.rendered} />
                     </ScrollView>
+                   
                 </SafeAreaView>
+               
                  </Animated.View>
+                 
+                 </View>
+                 
+                 
             ):(<Animated.View style={{
       
               transform: [
@@ -168,10 +168,9 @@ const Posts= (props) => {
             </SafeAreaView>
             </Animated.View>)
         }
-  
-         
+        
           </View>
-        }
+           <View style={{width:"100%",height:"40%",backgroundColor:"green"}}></View>
     
     </>);
 

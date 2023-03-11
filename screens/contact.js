@@ -12,7 +12,7 @@ function Contact({navigation}){
     return (
         <>
         <Hamburger navigation={navigation} resetFunction={resetGame} infoFunction={about}/>
-        <View>
+        <View style={{backgroundColor: 'rgba(183,153,114,0.25)', height: '100%'}}>
             <Text>
                 To buy the Buddhi Yoga game board and to learn more about ancient Indian board games, please contact us.
             </Text>

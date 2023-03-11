@@ -12,10 +12,10 @@ function Aboutus({navigation}){
     return (
         <>
         <Hamburger navigation={navigation} resetFunction={resetGame} infoFunction={about}/>
-        <View>
-            <Text>
-                To buy the Buddhi Yoga game board and to learn more about ancient Indian board games, please contact us.
-            </Text>
+        <View style={{backgroundColor: 'rgba(183,153,114,0.25)',height: '100%'}}>
+           <Text>
+            About Us
+           </Text>
         </View>
         </>
     )
