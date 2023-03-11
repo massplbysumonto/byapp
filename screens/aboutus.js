@@ -1,7 +1,7 @@
 import React from "react";
 import { View,Text } from "react-native";
 import Hamburger from '../components/hamburger';
-function Contact({navigation}){
+function Aboutus({navigation}){
     const resetGame=(e)=>{
         setGameState(1);
       }
@@ -20,4 +20,4 @@ function Contact({navigation}){
         </>
     )
 }
-export default Contact;
+export default Aboutus;

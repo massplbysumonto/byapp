@@ -141,6 +141,7 @@ const initializePawn = ()=>
 {
   var data=playerPositions[positionConfig.initCellPos].info.name;
   // cellInfo.current.setNativeProps({text:data});
+  // console.log("data"+data);
   cellInfo.current=data;
       
     Animated.timing(position,{
@@ -249,6 +250,7 @@ const initializePawn = ()=>
       player.targetPosition=player.position+iDisplacement;
        movePawnToCell();
    cellInfo.current=playerPositions[player.position].info.name;  
+  //  console.log(playerPositions[player.targetPosition].info.name)
   //  setCell(cellInfo.current);
      }
      else if(iDisplacement!=0)
@@ -256,6 +258,7 @@ const initializePawn = ()=>
        dice.iDiceCurrentRoll=iDisplacement;
         movePawnNextCell();
     cellInfo.current=playerPositions[player.position].info.name;
+    // console.log(playerPositions[player.targetPosition].info.name)
     // setCell(cellInfo.current);
      }
      postIdCurrent.current=playerPositions[player.position].postID;
@@ -301,6 +304,7 @@ const initializePawn = ()=>
 
   const movePawnNextCell=()=>{
     
+
     Animated.sequence([
     Animated.timing(position,{
       toValue:{x:playerPositions[player.position].x,y:playerPositions[player.position].y},
@@ -318,9 +322,8 @@ const initializePawn = ()=>
       {
         landingEvent();
       }
-
     });
-
+    
     
 
   };
@@ -361,7 +364,6 @@ const getPosts=(e)=>{
 
   const resetGame=(e)=>{
     setGameState(1);
-    // alert("reset game");
   }
   const about=(e)=>{
     alert("about game");
@@ -430,7 +432,7 @@ const getPosts=(e)=>{
    </View>
 
    <View style={{ position:'absolute',width:"100%", height:"100%",justifyContent:'flex-end'}} >
-   <BlockInformation info={cellInfo.current}/>        
+   <BlockInformation ref={cellInfo} info={cellInfo.current}/>        
    </View>
    </>
   );

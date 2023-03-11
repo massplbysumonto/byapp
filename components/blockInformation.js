@@ -1,8 +1,8 @@
 import React,{useState,useEffect} from "react";
 import { Animated,View,Text, TouchableWithoutFeedback ,Easing} from "react-native";
-
-function BlockInformation({info}){
-    console.log(info);
+import { forwardRef } from "react";
+const BlockInformation = forwardRef((ref) => {
+    console.log(ref);
     const [isRotating, setRotation] = useState(true);
     const [lengthValueHolder,setlengthValueHolder] =useState(new Animated.Value(isRotating ? 0 : 1));
 
@@ -54,14 +54,14 @@ function BlockInformation({info}){
 return(
     
     <TouchableWithoutFeedback onPress={()=>checkOnPress()}>
-    <Animated.View style={[{width:"100%", backgroundColor:"#b79972",  borderWidth: 2,borderTopLeftRadius: 15,borderTopRightRadius: 15,borderColor:"black"},viewLengthStyle]}>
+    <Animated.View style={[{width:"100%", backgroundColor:"#b79972",borderTopLeftRadius: 15,borderTopRightRadius: 15,borderColor:"black"},viewLengthStyle]}>
         <Text>
-            {info}
+        ref
         </Text>
     </Animated.View>
     </TouchableWithoutFeedback>
 )
 
-}
+})
 
 export default BlockInformation;
