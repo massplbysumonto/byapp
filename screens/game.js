@@ -158,6 +158,7 @@ const initializePawn = ()=>
   },[gameState]);
 
   const diceRoll=()=>{
+    alert("jkh")
     Animated.timing(
       diceSpinValue,
     {
