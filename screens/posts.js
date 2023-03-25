@@ -99,7 +99,7 @@ const Posts= (props,{navigation}) => {
       };
 
     return (<>
-    <SafeAreaView>
+    <SafeAreaView style={styles.cardViewOverAll}>
             <View style={{backgroundColor:"#cfc19f"}}>
               <Postsheader navigation={props.navigation}/>
               
@@ -128,13 +128,13 @@ const Posts= (props,{navigation}) => {
                 }}
       
               >
-                <SafeAreaView style={styles.cardViewOverAll}>
-                    <ScrollView >
+                
+                    <ScrollView contentInsetAdjustmentBehavior="automatic">
                         <PostsPictureComponent postId={15} subTitle={postList[0].excerpt.rendered} title={postList[0].title.rendered} imageUrl={postList[0].better_featured_image.media_details.sizes.large.source_url} />
                         <PostsContentComponent content={postList[0].content.rendered} />
                     </ScrollView>
                    
-                </SafeAreaView>
+                
                
                  </Animated.View>
                  

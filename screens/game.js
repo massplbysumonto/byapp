@@ -115,6 +115,7 @@ const getData = async (key) => {
     }
   } catch(e) {
     // error reading value
+    console.log("Error While fetching Data")
   }
 }
 
@@ -282,7 +283,7 @@ const initializePawn = ()=>
 {
   getData('@saveSate').then((data)=>{
     
-      if(data=='null')
+      if(data=='null' || data==null || data==undefined )
       {
         dice.current=initialStates.dice;
         iDisplacement.current=initialStates.iDisplacement;

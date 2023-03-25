@@ -1,11 +1,11 @@
 import React,{useState,useEffect} from "react";
-import { Animated,View,Text, TouchableWithoutFeedback ,Easing,TouchableOpacity} from "react-native";
+import { Animated,View,Text, TouchableWithoutFeedback ,Easing,TouchableOpacity,ScrollView} from "react-native";
 import { forwardRef } from "react";
 import {WP_URL_POST}  from '@env';
 import RenderHtml from 'react-native-render-html';
 const BlockInformation = ({excerpt,quote,postId,navigation}) => {
-    console.log(excerpt);
-    console.log(postId);
+    // console.log(excerpt);
+    // console.log(postId);
     const [isRotating, setRotation] = useState(true);
     const [lengthValueHolder,setlengthValueHolder] =useState(new Animated.Value(isRotating ? 0 : 1));
     const [postList, setPostList] = React.useState([]);
@@ -31,9 +31,8 @@ const BlockInformation = ({excerpt,quote,postId,navigation}) => {
       color: 'black',
       backgroudColor:'#F2D997',
       fontSize: 13,
-      justifyContent:"center",
-      alignContent:"center",
-      alignSelf:"center"
+     adjustsFontSizeToFit:true,
+     paddingHorizontal:10
     },
     a: {
       color: 'green'
@@ -42,7 +41,7 @@ const BlockInformation = ({excerpt,quote,postId,navigation}) => {
 
     async function getPosts() {
         try {
-        console.log(WP_URL_POST+''+postId);
+        // console.log(WP_URL_POST+''+postId);
         let response = await fetch(
             WP_URL_POST+''+postId,
         );
@@ -109,16 +108,23 @@ return(
                 know More
             </Text>
             </TouchableWithoutFeedback>
+            
              <RenderHtml
                 source={{
                 html: postList[0].excerpt.rendered
                 }}
                 tagsStyles={tagsStyles}
             />
-
+           
             </>
             
-        ):(<Text style={{alignContent:'center',paddingHorizontal:"5%",paddingTop:"1%"}}>
+        ):(<Text style={{alignContent:'center',paddingHorizontal:"5%",paddingTop:"1%",color: 'black',
+        backgroudColor:'#F2D997',
+        fontSize: 13,
+        justifyContent:"center",
+        alignContent:"center",
+        alignSelf:"center",
+       adjustsFontSizeToFit:true}}>
                 {excerpt}
         </Text>)}
         

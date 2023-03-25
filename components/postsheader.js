@@ -8,9 +8,10 @@ function Postsheader({navigation}){
         <View style={{width:"100%",height:"5%",marginVertical:0,paddingVertical:3,flexDirection:"row",backgroundColor:"#b79972"}}>
             <View style={{flexDirection:"row", alignItems:"center",width:"50%", justifyContent:"space-evenly"}}>
             <TouchableWithoutFeedback onPress={()=>navigation.goBack()}>
-                 <Icon name="arrow-left" size={25} color="#000"/>
+                 <Icon name="arrow-left" size={25} color="#000" style={{paddingHorizontal:10}}/>
             </TouchableWithoutFeedback>
-                <Image  source={require("../assets/login/buddiyogaLogo.png")} style={{width:"50%",height:'100%'}} resizeMode="center"/>
+                <Image  source={require("../assets/login/buddiyogaLogo.png")} style={{flex: 1, width:"100%",height:"100%",
+    resizeMode: 'contain'}} resizeMode="center"/>
                 {/* <TouchableWithoutFeedback onPress={()=>navigation.goBack()}>
                  <Zoomin/>
             </TouchableWithoutFeedback> */}
