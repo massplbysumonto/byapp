@@ -19,9 +19,9 @@ function Hamburger({navigation,resetFunction,infoFunction}){
                 <TouchableWithoutFeedback onPress={(e)=>{resetFunction(e)}}>
                     <Icon name="rotate-right" size={25} color="#582c24" />
                 </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback onPress={(e)=>{infoFunction(e)}}>
+                {/* <TouchableWithoutFeedback onPress={(e)=>{infoFunction(e)}}>
                     <Icon name="question" size={25} color="#582c24" />
-                </TouchableWithoutFeedback>
+                </TouchableWithoutFeedback> */}
             </View>
         </View>
         

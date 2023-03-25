@@ -51,6 +51,7 @@ const Posts= (props,{navigation}) => {
     
     async function getPosts() {
         try {
+        console.log(WP_URL_POST+''+postId);
         let response = await fetch(
             WP_URL_POST+''+postId,
         );
@@ -98,6 +99,7 @@ const Posts= (props,{navigation}) => {
       };
 
     return (<>
+    <SafeAreaView>
             <View style={{backgroundColor:"#cfc19f"}}>
               <Postsheader navigation={props.navigation}/>
               
@@ -171,6 +173,7 @@ const Posts= (props,{navigation}) => {
         
           </View>
            <View style={{width:"100%",height:"40%",backgroundColor:"green"}}></View>
+           </SafeAreaView>
     
     </>);
 

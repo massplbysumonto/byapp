@@ -1,5 +1,5 @@
 import React from "react";
-import { View,Text,StyleSheet } from "react-native";
+import { View,Text,StyleSheet,SafeAreaView } from "react-native";
 import Hamburger from '../components/hamburger';
 import ProfileManagement from "../components/ProfileManagement";
 import Register from "../components/Register";
@@ -15,6 +15,7 @@ function Profile({navigation}){
       }
     return (
         <>
+        <SafeAreaView>
         <Hamburger navigation={navigation} resetFunction={resetGame} infoFunction={about}/>
         <View style={styles.mains}>
             <View >
@@ -24,6 +25,7 @@ function Profile({navigation}){
             </View>
            
         </View>
+        </SafeAreaView>
         </>
     )
 }

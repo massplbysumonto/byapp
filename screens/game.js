@@ -1,4 +1,4 @@
-import React,{useState,useRef, useCallback, useMemo, useEffect} from 'react';
+import React,{useState,useRef, useCallback, useMemo, useEffect,createRef} from 'react';
 import {
   StyleSheet,
   View,
@@ -8,12 +8,15 @@ import {
   Easing,
   Text,
   TextInput,
+  Platform,
+  SafeAreaView
 } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import BlockInformation from '../components/blockInformation';
 import {
-    GestureHandlerRootView,TapGestureHandler
+    GestureHandlerRootView,TapGestureHandler,PanGestureHandler,PinchGestureHandler
 } from 'react-native-gesture-handler';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { Link } from '@react-navigation/native';
 
 import Dice7 from "../assets/game/dice/dice7.png";
@@ -22,14 +25,65 @@ import Hamburger from '../components/hamburger';
 const Game= ({navigation}) => {
   
   const postIdCurrent =useRef(551);
-
+  const postIdCellMovement=useRef(551);
   const diceFace = useRef(Dice7);
   const diceFaceFrame = useRef(null);
   const cellInfoNow=useRef(null);
+  const [panEnabled, setPanEnabled] = useState(false);
+  const pinchRef = createRef();
+  const panRef = createRef();
+  const playerPositionX=useRef(0);
+  const playerPositionY=useRef(0);
+  const scale = useRef(new Animated.Value(1)).current;
+  const translateX = useRef(new Animated.Value(0)).current;
+  const translateY = useRef(new Animated.Value(0)).current;
+  const onPinchEvent= Animated.event([{
+    nativeEvent:{scale}
+  }],{useNativeDriver:true});
+  const onPanEvent= Animated.event([{
+    nativeEvent:{
+      translationX: translateX,
+      translationY: translateY
+    }
+  }],{useNativeDriver:true});
+
+  const handlePinchStateChange = ({ nativeEvent }) => {
+    // enabled pan only after pinch-zoom
+    if (nativeEvent.state === State.ACTIVE) {
+      setPanEnabled(true);
+    }
+
+    // when scale < 1, reset scale back to original (1)
+    const nScale = nativeEvent.scale;
+    if (nativeEvent.state === State.END) {
+      if (nScale < 1) {
+        Animated.spring(scale, {
+          toValue: 1,
+          useNativeDriver: true
+        }).start();
+        Animated.spring(translateX, {
+          toValue: 0,
+          useNativeDriver: true
+        }).start();
+        Animated.spring(translateY, {
+          toValue: 0,
+          useNativeDriver: true
+        }).start();
+
+        setPanEnabled(false);
+      }
+    }
+  };
   const [gameState,setGameState] =useState(0);
+  const [excerpt,setExcerptState] =useState("Hello World");
+  const [gameQoute,setgameQoute] =useState("Game Starts");
   const cellInfo = useRef("Loading please wait...");
 /* Variables for the game  */  
-  const position = new Animated.ValueXY({x:0,y:0});
+    
+  // const position = new Animated.ValueXY({x:0,y:0});
+
+  const [position,setPosition] = useState(new Animated.ValueXY({x:0,y:0}));
+  
   
   const diceSpinValue= new Animated.Value(0);
 
@@ -38,36 +92,123 @@ const Game= ({navigation}) => {
     outputRange: ['0deg', '720deg']
   });
 
+  const storeData = async (key,value) => {
+    try {
+      const jsonValue = JSON.stringify(value)
+      await AsyncStorage.setItem(key, jsonValue)
+    } catch (e) {
+      // saving error
+    }
+  }
 
 
-  var iDisplacement = 0;
-  var iSnakeLadderBase = 0;
-  var iOld_state = 0;
-  var iCurrent_state = 0;
-  var iReverseTo = 0;
-  var iRoll;
-  var iOld_ReverseTo = 0;
+const getData = async (key) => {
+  try {
+    const value = await AsyncStorage.getItem(key)
+    if(value !== null) {
+      // value previously stored
+      return value;
+    }
+    else
+    {
+      return null;
+    }
+  } catch(e) {
+    // error reading value
+  }
+}
+
+  var initialStates={
+    iDisplacement:0,
+    iSnakeLadderBase:0,
+    iOld_state:0,
+    iCurrent_state:0,
+    iReverseTo:0,
+    iRoll:0,
+    iOld_ReverseTo:0,
+    player:{
+      image: null,
+      position: 68,
+      targetPosition: 1,
+      wallet: 100,
+      global_direction: 1,
+      current_cell_type: 0
+    },
+    dice:{
+      iDiceFace: 0,
+      iDiceRollCount: 0,
+      iDiceCurrentRoll: 0,
+      ispinValue:1
+    }
+
+
+  }
+
+  var saveStates={
+    iDisplacement:0,
+    iSnakeLadderBase:0,
+    iOld_state:0,
+    iCurrent_state:0,
+    iReverseTo:0,
+    iRoll:0,
+    iOld_ReverseTo:0,
+    player:{
+      image: null,
+      position: 68,
+      targetPosition: 1,
+      wallet: 100,
+      global_direction: 1,
+      current_cell_type: 0
+    },
+    dice:{
+      iDiceFace: 0,
+      iDiceRollCount: 0,
+      iDiceCurrentRoll: 0,
+      ispinValue:1
+    }
+
+
+  }
+  const iDisplacement = useRef(0);
+  const iSnakeLadderBase = useRef(0);
+  const iOld_state = useRef(0);
+  const iCurrent_state = useRef(0);
+  const iReverseTo = useRef(0);
+  const iRoll=useRef(0);
+  const iOld_ReverseTo = useRef(0);
 
   //Player Variable
-  var player = {
-    image: null,
-    position: 68,
-    targetPosition: 1,
-    wallet: 100,
-    global_direction: 1,
-    current_cell_type: 0
-};
+//   var player = {
+//     image: null,
+//     position: 68,
+//     targetPosition: 1,
+//     wallet: 100,
+//     global_direction: 1,
+//     current_cell_type: 0
+// };
+const player = useRef({
+  image: null,
+  position: 68,
+  targetPosition: 1,
+  wallet: 100,
+  global_direction: 1,
+  current_cell_type: 0
+});
 //End of player variable
 
 
 
 //Start of Dice Variable
-var dice = {
-  iDiceFace: 0,
+// var dice = {
+//   iDiceFace: 0,
+//   iDiceRollCount: 0,
+//   iDiceCurrentRoll: 0,
+//   ispinValue:1
+// };
+const dice=useRef({iDiceFace: 0,
   iDiceRollCount: 0,
   iDiceCurrentRoll: 0,
-  ispinValue:1
-};
+  ispinValue:1})
 //End of Dice Variable
 
 function changePage ()
@@ -139,48 +280,105 @@ function changePage ()
 
 const initializePawn = ()=>
 {
+  getData('@saveSate').then((data)=>{
+    
+      if(data=='null')
+      {
+        dice.current=initialStates.dice;
+        iDisplacement.current=initialStates.iDisplacement;
+        iSnakeLadderBase.current = initialStates.iSnakeLadderBase;
+        iOld_state.current = initialStates.iOld_state
+        iCurrent_state.current = initialStates.iCurrent_state;
+        iReverseTo.current = initialStates.iOld_ReverseTo;
+        iRoll.current=initialStates.iRoll;
+        iOld_ReverseTo.current = initialStates.iOld_ReverseTo;
+        player.current=initialStates.player;
+      
+        playerPositionX.current=playerPositions[positionConfig.initCellPos].x;
+        playerPositionY.current=playerPositions[positionConfig.initCellPos].y;   
+          Animated.timing(position,{
+            toValue:{x:playerPositionX.current,y:playerPositionY.current},
+            useNativeDriver: true
+            }).start();
+            setExcerptState(playerPositions[positionConfig.initCellPos].info.quote[0].name)
+      }
+      else
+      {
+        let savedData=JSON.parse(data);
+        dice.current=savedData.dice;
+        iDisplacement.current=savedData.iDisplacement;
+        iSnakeLadderBase.current = savedData.iSnakeLadderBase;
+        iOld_state.current = savedData.iOld_state
+        iCurrent_state.current = savedData.iCurrent_state;
+        iReverseTo.current = savedData.iOld_ReverseTo;
+        iRoll.current=savedData.iRoll;
+        iOld_ReverseTo.current = savedData.iOld_ReverseTo;
+        player.current=savedData.player;
+        postIdCellMovement.current=playerPositions[player.current.position].postID;
+        playerPositionX.current=playerPositions[player.current.position].x;
+        playerPositionY.current=playerPositions[player.current.position].y;   
+          Animated.timing(position,{
+            toValue:{x:playerPositionX.current,y:playerPositionY.current},
+            useNativeDriver: true
+            }).start();
+            setExcerptState(playerPositions[player.current.position].info.quote[0].name)
+      }
+  });
+ 
+  
+      
+}
+const stateChangePawn = ()=>
+{
   var data=playerPositions[positionConfig.initCellPos].info.name;
   // cellInfo.current.setNativeProps({text:data});
   // console.log("data"+data);
-  cellInfo.current=data;
-      
+  cellInfo.current=data;  
     Animated.timing(position,{
-      toValue:{x:playerPositions[positionConfig.initCellPos].x,y:playerPositions[positionConfig.initCellPos].y},
+      toValue:{x:playerPositionX.current,y:playerPositionY.current},
       useNativeDriver: true
       }).start();
       
 }
 
   useEffect(()=>{
-
-    initializePawn();
+    
+      initializePawn();
 
   },[gameState]);
 
+  useEffect(()=>{
+    stateChangePawn();
+    
+  },[excerpt]);
+
   const diceRoll=()=>{
-    alert("jkh")
+    // alert("jkh")
     Animated.timing(
       diceSpinValue,
     {
-      toValue: dice.ispinValue,
+      toValue: dice.current.ispinValue,
       duration: 200,
       easing: Easing.linear, // Easing is an additional import from react-native
       useNativeDriver: true  // To make use of native driver for performance
     }
   ).start(()=>{
 
-    dice.iDiceRollCount++;
+    dice.current.iDiceRollCount++;
 
 
     let min = 1;
     let max = 7;
-    dice.iDiceCurrentRoll= min+Math.floor( Math.random() * (max - min));
-    if(iSnakeLadderBase==0)
+    dice.current.iDiceCurrentRoll= min+Math.floor( Math.random() * (max - min));
+    // dice.current.iDiceCurrentRoll=6;
+    
+    if(iSnakeLadderBase.current==0)
     {
-      diceFace.current=diceImage[dice.iDiceCurrentRoll-1].imageurl;
-      let img = diceImage[dice.iDiceCurrentRoll-1].imageurl;
+      diceFace.current=diceImage[dice.current.iDiceCurrentRoll-1].imageurl;
+      let img = diceImage[dice.current.iDiceCurrentRoll-1].imageurl;
       let imgProps = Image.resolveAssetSource(img);
       diceFaceFrame.current.setNativeProps({ src: [imgProps] });
+      
     }
     else
     {
@@ -189,18 +387,18 @@ const initializePawn = ()=>
       let img = diceImage[6].imageurl;
       let imgProps = Image.resolveAssetSource(img);
       diceFaceFrame.current.setNativeProps({ src: [imgProps] });
-
+      
     }
     initiatePawnMovement();
   });
 
-  if(dice.ispinValue==1)
+  if(dice.current.ispinValue==1)
   {
-    dice.ispinValue=0;
+    dice.current.ispinValue=0;
   }
   else
   {
-    dice.ispinValue=1;
+    dice.current.ispinValue=1;
   }
 
   };
@@ -209,81 +407,83 @@ const initializePawn = ()=>
 
 
   const initiatePawnMovement = async ()=>{
+    
+       iRoll.current=dice.current.iDiceCurrentRoll;
+       iOld_state.current = iCurrent_state.current;
+       iCurrent_state.current = playerPositions[player.current.position].info.movement.state[(iRoll.current * 3) + iOld_state.current];
 
-       iRoll=dice.iDiceCurrentRoll;
-       iOld_state = iCurrent_state;
-       iCurrent_state = playerPositions[player.position].info.movement.state[(iRoll * 3) + iOld_state];
 
 
-
-      if (iCurrent_state == 999) {
-        iCurrent_state = iOld_state;
+      if (iCurrent_state.current == 999) {
+        iCurrent_state.current = iOld_state.current;
       }
 
 
-      iDisplacement = playerPositions[player.position].info.movement.displacement[iOld_state];
+      iDisplacement.current = playerPositions[player.current.position].info.movement.displacement[iOld_state.current];
 
 
-      if (iDisplacement == 0) {
-        iDisplacement = playerPositions[player.position].info.movement.displacement[(iRoll * 3) + iOld_state];
+      if (iDisplacement.current == 0) {
+        iDisplacement.current = playerPositions[player.current.position].info.movement.displacement[(iRoll.current* 3) + iOld_state.current];
       }
 
-    if (iDisplacement < 999) {
-      iSnakeLadderBase = playerPositions[player.position + iDisplacement].info.movement.displacement[iCurrent_state];
+    if (iDisplacement.current < 999) {
+      iSnakeLadderBase.current = playerPositions[player.current.position + iDisplacement.current].info.movement.displacement[iCurrent_state.current];
     }
     
 
-      if ((iDisplacement != 0) && (iDisplacement < 999) ) {
-        iOld_ReverseTo = iReverseTo;
-        iReverseTo = playerPositions[player.position].info.movement.return[(iRoll * 3) + iOld_state];
-        if (iReverseTo == 999) {
-            iReverseTo = iOld_ReverseTo;
+      if ((iDisplacement.current != 0) && (iDisplacement.current < 999) ) {
+        iOld_ReverseTo.current = iReverseTo.current;
+        iReverseTo.current = playerPositions[player.current.position].info.movement.return[(iRoll.current * 3) + iOld_state.current];
+        if (iReverseTo.current == 999) {
+            iReverseTo.current = iOld_ReverseTo.current;
         }
 
-        player.targetPosition = player.position + iDisplacement;
+        player.current.targetPosition = player.current.position + iDisplacement.current;
     }
-    else if (iDisplacement == 999) {
-        player.targetPosition = iReverseTo;
+    else if (iDisplacement.current == 999) {
+        player.current.targetPosition = iReverseTo.current;
     }
 
-     if(iDisplacement < 0 || iDisplacement > 6 )
+     if(iDisplacement.current < 0 || iDisplacement.current > 6 )
      {
-      player.targetPosition=player.position+iDisplacement;
+      player.current.targetPosition=player.current.position+iDisplacement.current;
        movePawnToCell();
-   cellInfo.current=playerPositions[player.position].info.name;  
+   cellInfo.current=playerPositions[player.current.position].info.name;  
   //  console.log(playerPositions[player.targetPosition].info.name)
   //  setCell(cellInfo.current);
      }
-     else if(iDisplacement!=0)
+     else if(iDisplacement.current!=0)
      {
-       dice.iDiceCurrentRoll=iDisplacement;
+       dice.current.iDiceCurrentRoll=iDisplacement.current;
         movePawnNextCell();
-    cellInfo.current=playerPositions[player.position].info.name;
+    cellInfo.current=playerPositions[player.current.position].info.name;
     // console.log(playerPositions[player.targetPosition].info.name)
     // setCell(cellInfo.current);
      }
-     postIdCurrent.current=playerPositions[player.position].postID;
+     postIdCurrent.current=playerPositions[player.current.position].postID;
     
   };
 
   const landingEvent =()=>{
     
-    player.global_direction=1;
-    player.targetPosition=player.position;
-
-    if(iSnakeLadderBase>0)
+    player.current.global_direction=1;
+    player.current.targetPosition=player.current.position;
+    
+    if(iSnakeLadderBase.current>0)
     {
       diceFace.current=diceImage[8].imageurl;
       let img = diceImage[8].imageurl;
       let imgProps = Image.resolveAssetSource(img);
       diceFaceFrame.current.setNativeProps({ src: [imgProps] });
+      
     }
-    else if(iSnakeLadderBase < 0)
+    else if(iSnakeLadderBase.current < 0)
     {
       diceFace.current=diceImage[7].imageurl;
       let img = diceImage[7].imageurl;
       let imgProps = Image.resolveAssetSource(img);
       diceFaceFrame.current.setNativeProps({ src: [imgProps] });
+      
     }
     else
     {
@@ -291,36 +491,43 @@ const initializePawn = ()=>
       let img = diceImage[6].imageurl;
       let imgProps = Image.resolveAssetSource(img);
       diceFaceFrame.current.setNativeProps({ src: [imgProps] });
+      
     }
+    postIdCellMovement.current=playerPositions[player.current.position].postID;
+    saveStatesFunc();
+    setExcerptState(playerPositions[player.current.position].info.quote[0].name);
     // alert
   };
 
   const flyoverEvent =()=>{
-    if((player.position+1) > 72 )
+    if((player.current.position+1) > 72 )
     {
-      player.global_direction=-1;
+      player.current.global_direction=-1;
     }
 
   };
 
   const movePawnNextCell=()=>{
     
+    playerPositionX.current=playerPositions[player.current.position].x;
+    playerPositionY.current=playerPositions[player.current.position].y;
 
     Animated.sequence([
     Animated.timing(position,{
-      toValue:{x:playerPositions[player.position].x,y:playerPositions[player.position].y},
+      toValue:{x: playerPositionX.current,y: playerPositionY.current},
       useNativeDriver: true
     })]).start(()=>{
 
-      if(dice.iDiceCurrentRoll>0)
+      if(dice.current.iDiceCurrentRoll>0)
       {
         flyoverEvent();
-        player.position= player.position+(1*player.global_direction);
-        dice.iDiceCurrentRoll--;
+        player.current.position= player.current.position+(1*player.current.global_direction);
+        dice.current.iDiceCurrentRoll--;
         movePawnNextCell();
       }
       else
       {
+        
         landingEvent();
       }
     });
@@ -330,12 +537,37 @@ const initializePawn = ()=>
   };
 
   const movePawnToCell=()=>{
+    
+    playerPositionX.current=playerPositions[player.current.targetPosition].x;
+    playerPositionY.current=playerPositions[player.current.targetPosition].y;
+    
     Animated.timing(position,{
-      toValue:{x:playerPositions[player.targetPosition].x,y:playerPositions[player.targetPosition].y},
+      toValue:{x: playerPositionX.current,y:playerPositionY.current},
       useNativeDriver: true
     }).start(()=>{
-      player.position=player.targetPosition;
+      player.current.position=player.current.targetPosition;
+      postIdCellMovement.current=playerPositions[player.current.position].postID;
+      saveStatesFunc();
+      setExcerptState(playerPositions[player.current.position].info.quote[0].name);
     });
+
+    
+    
+  };
+
+  const saveStatesFunc =()=>{
+
+    saveStates.dice=dice.current;
+      saveStates.player=player.current;
+      saveStates.iCurrent_state=iCurrent_state.current;
+      saveStates.iDisplacement=iDisplacement.current;
+      saveStates.iOld_ReverseTo=iOld_ReverseTo.current;
+      saveStates.iOld_state=iOld_state.current;
+      saveStates.iReverseTo=iOld_ReverseTo.current;
+      saveStates.iRoll=iRoll.current;
+      saveStates.iSnakeLadderBase=iSnakeLadderBase.current;
+      storeData('@saveSate',saveStates);
+
   };
   
 const getPosts=(e)=>{
@@ -364,8 +596,23 @@ const getPosts=(e)=>{
 }
 
   const resetGame=(e)=>{
-    setGameState(1);
-  }
+   
+      storeData('@saveSate',null).then(()=>{
+        if(gameState==1)
+        {
+          setGameState(0);
+        }
+        else
+        {
+          setGameState(1);
+        }
+       
+      });
+      
+    }
+    
+    
+  
   const about=(e)=>{
     alert("about game");
 
@@ -373,17 +620,27 @@ const getPosts=(e)=>{
 
   return (
     <>
-    <Hamburger navigation={navigation} resetFunction={resetGame} infoFunction={about}/>
+    <SafeAreaView>
+    <Hamburger navigation={navigation} resetFunction={resetGame} infoFunction={about} style={styles.hamburgerPosition} />
 
     <View style={styles.container} >
-    <View style={styles.gameContainer}>
+    <PanGestureHandler
+        onGestureEvent={onPanEvent}
+        ref={panRef}
+        simultaneousHandlers={[pinchRef]}
+        enabled={panEnabled}
+        failOffsetX={[-1000, 1000]}
+        shouldCancelWhenOutside
+      >
+    <Animated.View style={styles.gameContainer}>
         <GestureHandlerRootView>
         <TapGestureHandler
           numberOfTaps={2}
           onActivated={(e) => (
               getPosts(e)
         )}>
-          <Image source={require('../assets/game/board.jpg')} style={{width:380,height:380,alignSelf:'center'}} />
+          
+          <Image source={require('../assets/game/board.jpg')} style={{width:380,height:380}} />
         </TapGestureHandler>
         </GestureHandlerRootView>
 
@@ -422,19 +679,32 @@ const getPosts=(e)=>{
         transform: [{rotate: spin}]
     
     }}>
-      <TouchableOpacity onPress={() => diceRoll()} style={{justifyContent:'center', alignItems:'center'}}>
-      <Image ref={diceFaceFrame} source={require("../assets/game/dice/dice7.png")} style={{width:"80%",height:"100%"}}/>
+      <TouchableOpacity onPress={() => diceRoll()} style={{justifyContent:'center', alignItems:'center',zIndex:-1}}>
+      <PinchGestureHandler
+            ref={pinchRef}
+            onGestureEvent={onPinchEvent}
+            simultaneousHandlers={[panRef]}
+            onHandlerStateChange={handlePinchStateChange}
+          >
+      <Animated.Image ref={diceFaceFrame} source={require("../assets/game/dice/dice7.png")} 
+      style={{width:"80%",height:"100%",transform: [{ scale }, { translateX }, { translateY }]}}
+      resizeMode="contain"
+      />
+      </PinchGestureHandler>
       </TouchableOpacity>
 
       </Animated.View>
+
       </View>
 
-    </View>
+    </Animated.View>
+    </PanGestureHandler>
    </View>
 
-   <View style={{ position:'absolute',width:"100%", height:"100%",justifyContent:'flex-end'}} >
-   <BlockInformation ref={cellInfo} info={cellInfo.current}/>        
+   <View style={{ marginTop:'80%',width:"100%", height:"50%",justifyContent:'flex-end',backgroundColor: 'rgba(255, 255, 255, 1)'}} >
+   <BlockInformation ref={cellInfo} excerpt={excerpt} postId={postIdCellMovement.current} navigation={navigation} />        
    </View>
+   </SafeAreaView>
    </>
   );
 };
@@ -444,13 +714,17 @@ const styles = StyleSheet.create({
     flex:1,
     alignContent:'center',
     justifyContent:'center',
-    backgroundColor:'rgba(183,153,114,0.25)',
-    position:'relative'
+    position:'absolute',
+    marginTop:'30%',
+    zIndex:1
+    
   },
   gameContainer:{
     alignContent:'center',
     width:"100%",
     height:"90%",
+    marginLeft:"1.5%",
+    zIndex:1
   },
   CircleShape: {
     position:'absolute',
