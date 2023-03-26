@@ -13,8 +13,11 @@ import {
 } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import BlockInformation from '../components/blockInformation';
+import PinchZoomView from 'react-native-pinch-zoom-view';
+import Pinchable from 'react-native-pinchable';
+
 import {
-    GestureHandlerRootView,TapGestureHandler,PinchGestureHandler,PinchGestureHandlerGestureEvent,PanGestureHandler,
+    GestureHandlerRootView,TapGestureHandler,PinchGestureHandler,PanGestureHandler,
     State
 } from 'react-native-gesture-handler';
 import {useAnimatedGestureHandler} from 'react-native-reanimated';
@@ -50,7 +53,7 @@ const Game= ({navigation}) => {
   const playerPositionY=useRef(0);
 
 
-  
+  const[pinchState,setPinchState]=useState(false);
 
     // when scale < 1, reset scale back to original (1)
     
@@ -63,7 +66,8 @@ const Game= ({navigation}) => {
   // const position = new Animated.ValueXY({x:0,y:0});
 
   const [position,setPosition] = useState(new Animated.ValueXY({x:0,y:0}));
-  
+  var translateX = new Animated.Value(0);
+  var translateY = new Animated.Value(0);
   
   
   const diceSpinValue= new Animated.Value(0);
@@ -591,26 +595,40 @@ const getPosts=(e)=>{
 
   }
 
-  const pinchHandler=useAnimatedGestureHandler<PinchGestureHandlerGestureEvent>({
-
-    onActive : (event)=>{
-      
-      console.log(event);
-    },
-    
-
-  });
+  
+  
 
   const scalePinchGesture = new Animated.Value(1);
     const onGestureEvent = Animated.event([{nativeEvent: {scale: scalePinchGesture}}], {
       useNativeDriver: true,
     });
     const onPinchStateChange = (event) => {
-      console.log('called');
+      // console.log('called');
       if (event.nativeEvent.oldState === State.ACTIVE) {
         Animated.spring(scalePinchGesture, {toValue: 1, useNativeDriver: true}).start();
       }
     };
+
+
+    // const handlePanWhenDragging = (nativeEvent) =>{
+    //   if(pinchState)
+    //   {
+    //     translateX.setValue(nativeEvent.translationX);
+    //     translateY.setValue(nativeEvent.translationY);
+    //   }
+    // };
+
+    handlePanGesture = Animated.event([{nativeEvent: 
+      {translationX: translateX,translationY:translateY}}], 
+      { useNativeDriver: true });
+
+      const onHandlerPanStateChange = useCallback(() => {
+        // console.log("Changed Position")
+        translateX.setValue(0);
+        translateY.setValue(0);
+        
+      }, []);
+
 
   return (
     <>
@@ -622,13 +640,48 @@ const getPosts=(e)=>{
     <Animated.View style={styles.gameContainer}>
        
         <GestureHandlerRootView>
-           <PinchGestureHandler 
+        
+           {/* <PinchGestureHandler 
            onGestureEvent={onGestureEvent}
           onHandlerStateChange={onPinchStateChange}
-          >
-        <Animated.View style={{
-          transform: [{scale: scalePinchGesture}]
-        }}>
+          onActivated={()=>{
+            // console.log("hello world")
+            setPinchState(true)
+          }}
+          onEnded={()=>{
+            // console.log("hello world")
+            setPinchState(false)
+          }}
+
+          onBegan={()=>{
+            setPinchState(true)
+          }}
+
+          onCancelled={()=>{
+            // console.log("hello world")
+            setPinchState(false)
+          }}
+
+          onFailed={()=>{
+            // console.log("hello world")
+            setPinchState(false)
+          }}
+          > */}
+          <Pinchable>
+        <View style={{flex:1,width:380,height:380}}>
+          {/* <PanGestureHandler onGestureEvent={handlePanGesture} onHandlerStateChange={onHandlerPanStateChange}
+         
+         >
+         <Animated.View
+         style={{
+           transform: [{
+             translateY : translateY
+         },
+         {
+             translateX : translateX
+         }]
+         }}
+         > */}
         <TapGestureHandler
           numberOfTaps={2}
           onActivated={(e) => (
@@ -636,10 +689,14 @@ const getPosts=(e)=>{
         )}>
           <Image source={require('../assets/game/board.jpg')} style={{flex:1,width:380,height:380}} />
         </TapGestureHandler>
-        </Animated.View>
-        </PinchGestureHandler>
-        </GestureHandlerRootView>
+        {/* </Animated.View>
+        </PanGestureHandler> */}
+         </View>
+        {/* </PinchGestureHandler> */}
+        </Pinchable>
         
+        </GestureHandlerRootView>
+        { (!pinchState)?(  
       <Animated.View 
       style={{alignContent:'center',
       justifyContent:'center',
@@ -652,8 +709,7 @@ const getPosts=(e)=>{
       },{translateY:position.y}]
       }} >
         <Image source={require('../assets/game/token4.png')} style={{width:40,height:40}}  />
-      </Animated.View>
-
+      </Animated.View>):(<View></View>)}
       <View style={{
       // position:'absolute',
       flex:1,
@@ -664,6 +720,7 @@ const getPosts=(e)=>{
       bottom:20,
       height:"10%"
       }}>
+      { (!pinchState)?(
       <Animated.View style={{
         
         width:40,
@@ -675,6 +732,7 @@ const getPosts=(e)=>{
         transform: [{rotate: spin}]
     
     }}>
+      
       <TouchableOpacity onPress={() => diceRoll()} style={{justifyContent:'center', alignItems:'center',zIndex:-1}}>
       
       <Animated.Image ref={diceFaceFrame} source={diceFace} 
@@ -682,9 +740,12 @@ const getPosts=(e)=>{
       resizeMode="contain"
       />
       
+      
       </TouchableOpacity>
 
       </Animated.View>
+      ):(<View></View>)
+    }
 
       </View>
 
