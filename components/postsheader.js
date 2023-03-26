@@ -10,8 +10,10 @@ function Postsheader({navigation}){
             <TouchableWithoutFeedback onPress={()=>navigation.goBack()}>
                  <Icon name="arrow-left" size={25} color="#000" style={{paddingHorizontal:10}}/>
             </TouchableWithoutFeedback>
-                <Image  source={require("../assets/login/buddiyogaLogo.png")} style={{flex: 1, width:"100%",height:"100%",
-    resizeMode: 'contain'}} resizeMode="center"/>
+            <View style={{width:"50%"}}>
+                <Image  source={require("../assets/login/buddiyogaLogo.png")} style={{flex: 1, aspectRatio:2.8,
+                 resizeMode:"contain"}} />
+             </View>
                 {/* <TouchableWithoutFeedback onPress={()=>navigation.goBack()}>
                  <Zoomin/>
             </TouchableWithoutFeedback> */}

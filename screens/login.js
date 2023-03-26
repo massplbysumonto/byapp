@@ -129,7 +129,7 @@ const Login = () =>{
         borderRadius: 10,
         height: 'auto',
         paddingVertical: 12,
-        marginVertical: 0}}><Text style={{color: '#fff',fontWeight: '500', textAlign: 'center',paddingHorizontal:10}}>Start New Game</Text>
+        marginVertical: 0}}><Text style={{color: '#fff',fontWeight: '500', textAlign: 'center',paddingHorizontal:10}}>Start Game</Text>
         </TouchableOpacity>
         </Link>
         </Animated.View >

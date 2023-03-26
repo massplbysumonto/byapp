@@ -14,66 +14,46 @@ import {
 import { TouchableOpacity } from 'react-native';
 import BlockInformation from '../components/blockInformation';
 import {
-    GestureHandlerRootView,TapGestureHandler,PanGestureHandler,PinchGestureHandler
+    GestureHandlerRootView,TapGestureHandler,PinchGestureHandler,PinchGestureHandlerGestureEvent,PanGestureHandler,
+    State
 } from 'react-native-gesture-handler';
+import {useAnimatedGestureHandler} from 'react-native-reanimated';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { Link } from '@react-navigation/native';
 
+import Dice1 from "../assets/game/dice/dice1.png";
+import Dice2 from "../assets/game/dice/dice2.png";
+import Dice3 from "../assets/game/dice/dice3.png";
+import Dice4 from "../assets/game/dice/dice4.png";
+import Dice5 from "../assets/game/dice/dice5.png";
+import Dice6 from "../assets/game/dice/dice6.png";
 import Dice7 from "../assets/game/dice/dice7.png";
+import Dice8 from "../assets/game/dice/dice8.png";
+import Dice9 from "../assets/game/dice/dice9.png";
+import Dice10 from "../assets/game/dice/dice10.png";
+import Dice11 from "../assets/game/dice/dice11.png";
+import Dice12 from "../assets/game/dice/dice12.png";
+
 import Hamburger from '../components/hamburger';
 
 const Game= ({navigation}) => {
   
   const postIdCurrent =useRef(551);
   const postIdCellMovement=useRef(551);
-  const diceFace = useRef(Dice7);
   const diceFaceFrame = useRef(null);
   const cellInfoNow=useRef(null);
   const [panEnabled, setPanEnabled] = useState(false);
+  const [diceFace,setDiceFace] =useState(Dice7);
   const pinchRef = createRef();
   const panRef = createRef();
   const playerPositionX=useRef(0);
   const playerPositionY=useRef(0);
-  const scale = useRef(new Animated.Value(1)).current;
-  const translateX = useRef(new Animated.Value(0)).current;
-  const translateY = useRef(new Animated.Value(0)).current;
-  const onPinchEvent= Animated.event([{
-    nativeEvent:{scale}
-  }],{useNativeDriver:true});
-  const onPanEvent= Animated.event([{
-    nativeEvent:{
-      translationX: translateX,
-      translationY: translateY
-    }
-  }],{useNativeDriver:true});
 
-  const handlePinchStateChange = ({ nativeEvent }) => {
-    // enabled pan only after pinch-zoom
-    if (nativeEvent.state === State.ACTIVE) {
-      setPanEnabled(true);
-    }
+
+  
 
     // when scale < 1, reset scale back to original (1)
-    const nScale = nativeEvent.scale;
-    if (nativeEvent.state === State.END) {
-      if (nScale < 1) {
-        Animated.spring(scale, {
-          toValue: 1,
-          useNativeDriver: true
-        }).start();
-        Animated.spring(translateX, {
-          toValue: 0,
-          useNativeDriver: true
-        }).start();
-        Animated.spring(translateY, {
-          toValue: 0,
-          useNativeDriver: true
-        }).start();
-
-        setPanEnabled(false);
-      }
-    }
-  };
+    
   const [gameState,setGameState] =useState(0);
   const [excerpt,setExcerptState] =useState("Hello World");
   const [gameQoute,setgameQoute] =useState("Game Starts");
@@ -83,6 +63,7 @@ const Game= ({navigation}) => {
   // const position = new Animated.ValueXY({x:0,y:0});
 
   const [position,setPosition] = useState(new Animated.ValueXY({x:0,y:0}));
+  
   
   
   const diceSpinValue= new Animated.Value(0);
@@ -140,7 +121,8 @@ const getData = async (key) => {
       iDiceRollCount: 0,
       iDiceCurrentRoll: 0,
       ispinValue:1
-    }
+    },
+    diceFace:Dice7
 
 
   }
@@ -166,7 +148,8 @@ const getData = async (key) => {
       iDiceRollCount: 0,
       iDiceCurrentRoll: 0,
       ispinValue:1
-    }
+    },
+    diceFace:Dice7
 
 
   }
@@ -240,40 +223,40 @@ function changePage ()
 
   const diceImage=[
     {
-      imageurl:require("../assets/game/dice/dice1.png")
+      imageurl:Dice1
     },
     {
-      imageurl:require("../assets/game/dice/dice2.png")
+      imageurl:Dice2
     },
     {
-      imageurl:require("../assets/game/dice/dice3.png")
+      imageurl:Dice3
     },
     {
-      imageurl:require("../assets/game/dice/dice4.png")
+      imageurl:Dice4
     },
     {
-      imageurl:require("../assets/game/dice/dice5.png")
+      imageurl:Dice5
     },
     {
-      imageurl:require("../assets/game/dice/dice6.png")
+      imageurl:Dice6
     },
     {
-      imageurl:require("../assets/game/dice/dice7.png")
+      imageurl:Dice7
     },
     {
-      imageurl:require("../assets/game/dice/dice8.png")
+      imageurl:Dice8
     },
     {
-      imageurl:require("../assets/game/dice/dice9.png")
+      imageurl:Dice9
     },
     {
-      imageurl:require("../assets/game/dice/dice10.png")
+      imageurl:Dice10
     },
     {
-      imageurl:require("../assets/game/dice/dice11.png")
+      imageurl:Dice11
     },
     {
-      imageurl:require("../assets/game/dice/dice12.png")
+      imageurl:Dice12
     }
   ];
 
@@ -301,7 +284,8 @@ const initializePawn = ()=>
             toValue:{x:playerPositionX.current,y:playerPositionY.current},
             useNativeDriver: true
             }).start();
-            setExcerptState(playerPositions[positionConfig.initCellPos].info.quote[0].name)
+            setExcerptState(playerPositions[positionConfig.initCellPos].info.quote[0].name);
+            setDiceFace(Dice7);
       }
       else
       {
@@ -322,7 +306,8 @@ const initializePawn = ()=>
             toValue:{x:playerPositionX.current,y:playerPositionY.current},
             useNativeDriver: true
             }).start();
-            setExcerptState(playerPositions[player.current.position].info.quote[0].name)
+            setExcerptState(playerPositions[player.current.position].info.quote[0].name);
+            setDiceFace(savedData.diceFace);
       }
   });
  
@@ -375,20 +360,13 @@ const stateChangePawn = ()=>
     
     if(iSnakeLadderBase.current==0)
     {
-      diceFace.current=diceImage[dice.current.iDiceCurrentRoll-1].imageurl;
-      let img = diceImage[dice.current.iDiceCurrentRoll-1].imageurl;
-      let imgProps = Image.resolveAssetSource(img);
-      diceFaceFrame.current.setNativeProps({ src: [imgProps] });
+      
+      setDiceFace(diceImage[dice.current.iDiceCurrentRoll-1].imageurl)
       
     }
     else
     {
-
-      diceFace.current=diceImage[6].imageurl;
-      let img = diceImage[6].imageurl;
-      let imgProps = Image.resolveAssetSource(img);
-      diceFaceFrame.current.setNativeProps({ src: [imgProps] });
-      
+      setDiceFace(diceImage[6].imageurl)
     }
     initiatePawnMovement();
   });
@@ -472,26 +450,19 @@ const stateChangePawn = ()=>
     
     if(iSnakeLadderBase.current>0)
     {
-      diceFace.current=diceImage[8].imageurl;
-      let img = diceImage[8].imageurl;
-      let imgProps = Image.resolveAssetSource(img);
-      diceFaceFrame.current.setNativeProps({ src: [imgProps] });
+    
+      setDiceFace(diceImage[8].imageurl)
       
     }
     else if(iSnakeLadderBase.current < 0)
     {
-      diceFace.current=diceImage[7].imageurl;
-      let img = diceImage[7].imageurl;
-      let imgProps = Image.resolveAssetSource(img);
-      diceFaceFrame.current.setNativeProps({ src: [imgProps] });
+      
+      setDiceFace(diceImage[7].imageurl)
       
     }
     else
     {
-      diceFace.current=diceImage[6].imageurl;
-      let img = diceImage[6].imageurl;
-      let imgProps = Image.resolveAssetSource(img);
-      diceFaceFrame.current.setNativeProps({ src: [imgProps] });
+      setDiceFace(diceImage[6].imageurl)
       
     }
     postIdCellMovement.current=playerPositions[player.current.position].postID;
@@ -567,6 +538,7 @@ const stateChangePawn = ()=>
       saveStates.iReverseTo=iOld_ReverseTo.current;
       saveStates.iRoll=iRoll.current;
       saveStates.iSnakeLadderBase=iSnakeLadderBase.current;
+      saveStates.diceFace=diceFace;
       storeData('@saveSate',saveStates);
 
   };
@@ -619,32 +591,55 @@ const getPosts=(e)=>{
 
   }
 
+  const pinchHandler=useAnimatedGestureHandler<PinchGestureHandlerGestureEvent>({
+
+    onActive : (event)=>{
+      
+      console.log(event);
+    },
+    
+
+  });
+
+  const scalePinchGesture = new Animated.Value(1);
+    const onGestureEvent = Animated.event([{nativeEvent: {scale: scalePinchGesture}}], {
+      useNativeDriver: true,
+    });
+    const onPinchStateChange = (event) => {
+      console.log('called');
+      if (event.nativeEvent.oldState === State.ACTIVE) {
+        Animated.spring(scalePinchGesture, {toValue: 1, useNativeDriver: true}).start();
+      }
+    };
+
   return (
     <>
     <SafeAreaView>
     <Hamburger navigation={navigation} resetFunction={resetGame} infoFunction={about} style={styles.hamburgerPosition} />
 
     <View style={styles.container} >
-    <PanGestureHandler
-        onGestureEvent={onPanEvent}
-        ref={panRef}
-        simultaneousHandlers={[pinchRef]}
-        enabled={panEnabled}
-        failOffsetX={[-1000, 1000]}
-        shouldCancelWhenOutside
-      >
+    
     <Animated.View style={styles.gameContainer}>
+       
         <GestureHandlerRootView>
+           <PinchGestureHandler 
+           onGestureEvent={onGestureEvent}
+          onHandlerStateChange={onPinchStateChange}
+          >
+        <Animated.View style={{
+          transform: [{scale: scalePinchGesture}]
+        }}>
         <TapGestureHandler
           numberOfTaps={2}
           onActivated={(e) => (
               getPosts(e)
         )}>
-          
-          <Image source={require('../assets/game/board.jpg')} style={{width:380,height:380}} />
+          <Image source={require('../assets/game/board.jpg')} style={{flex:1,width:380,height:380}} />
         </TapGestureHandler>
+        </Animated.View>
+        </PinchGestureHandler>
         </GestureHandlerRootView>
-
+        
       <Animated.View 
       style={{alignContent:'center',
       justifyContent:'center',
@@ -681,17 +676,12 @@ const getPosts=(e)=>{
     
     }}>
       <TouchableOpacity onPress={() => diceRoll()} style={{justifyContent:'center', alignItems:'center',zIndex:-1}}>
-      <PinchGestureHandler
-            ref={pinchRef}
-            onGestureEvent={onPinchEvent}
-            simultaneousHandlers={[panRef]}
-            onHandlerStateChange={handlePinchStateChange}
-          >
-      <Animated.Image ref={diceFaceFrame} source={require("../assets/game/dice/dice7.png")} 
-      style={{width:"80%",height:"100%",transform: [{ scale }, { translateX }, { translateY }]}}
+      
+      <Animated.Image ref={diceFaceFrame} source={diceFace} 
+      style={{width:"80%",height:"100%"}}
       resizeMode="contain"
       />
-      </PinchGestureHandler>
+      
       </TouchableOpacity>
 
       </Animated.View>
@@ -699,7 +689,7 @@ const getPosts=(e)=>{
       </View>
 
     </Animated.View>
-    </PanGestureHandler>
+    
    </View>
 
    <View style={{ marginTop:'80%',width:"100%", height:"50%",justifyContent:'flex-end',backgroundColor: 'rgba(255, 255, 255, 1)'}} >
@@ -725,7 +715,7 @@ const styles = StyleSheet.create({
     width:"100%",
     height:"90%",
     marginLeft:"1.5%",
-    zIndex:1
+    zIndex:2
   },
   CircleShape: {
     position:'absolute',

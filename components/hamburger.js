@@ -10,8 +10,9 @@ function Hamburger({navigation,resetFunction,infoFunction}){
             <TouchableWithoutFeedback onPress={()=>navigation.toggleDrawer()}>
                 <Icon name="bars" size={25} color="#582c24" style={{paddingHorizontal:10}} />
             </TouchableWithoutFeedback>
-                <Image  source={require("../assets/login/buddiyogaLogo.png")} style={{  flex: 1, width:"100%",height:"100%",
-    resizeMode: 'contain'}} resizeMode="center" />
+            <View style={{width:"50%"}}>
+                <Image  source={require("../assets/login/buddiyogaLogo.png")} style={{  flex: 1,aspectRatio: 2.8 ,resizeMode: "contain"}} />
+        </View>
             </View>
             <View style={{flexDirection:"row",justifyContent:"space-evenly",width:"15%"}}></View>
             

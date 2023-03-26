@@ -3,6 +3,8 @@ import { Animated,View,Text, TouchableWithoutFeedback ,Easing,TouchableOpacity,S
 import { forwardRef } from "react";
 import {WP_URL_POST}  from '@env';
 import RenderHtml from 'react-native-render-html';
+
+
 const BlockInformation = ({excerpt,quote,postId,navigation}) => {
     // console.log(excerpt);
     // console.log(postId);
@@ -21,10 +23,13 @@ const BlockInformation = ({excerpt,quote,postId,navigation}) => {
     },[isRotating]);
     useEffect(()=>{
         getPosts();
-       
-        
-        
+         
    },[postId]);
+
+   function getText(html){
+    
+    return html.replace(/<[^>]+>/g, '');;
+}
 
    const tagsStyles = {
     body: {
@@ -32,7 +37,9 @@ const BlockInformation = ({excerpt,quote,postId,navigation}) => {
       backgroudColor:'#F2D997',
       fontSize: 13,
      adjustsFontSizeToFit:true,
-     paddingHorizontal:10
+     paddingHorizontal:10,
+     ellipsizeMode:'tail', 
+     numberOfLines: 2
     },
     a: {
       color: 'green'
@@ -105,16 +112,29 @@ return(
         <>
              <TouchableWithoutFeedback onPress={()=>changePage()}>
             <Text style={{alignContent:'center',paddingHorizontal:"5%",paddingTop:"1%",alignSelf:"center"}}>
-                know More
+                click here know more
             </Text>
             </TouchableWithoutFeedback>
             
-             <RenderHtml
+             {/* <RenderHtml
                 source={{
                 html: postList[0].excerpt.rendered
                 }}
                 tagsStyles={tagsStyles}
-            />
+                justifyContent="center"
+                ellipsizeMode='tail' 
+                numberOfLines={2}
+            /> */}
+
+            <Text style={{alignContent:'center',paddingHorizontal:"5%",paddingTop:"1%",color: 'black',
+        backgroudColor:'#F2D997',
+        fontSize: 13,
+        justifyContent:"center",
+        alignContent:"center",
+        alignSelf:"center",
+       adjustsFontSizeToFit:true}}
+       numberOfLines={4} ellipsizeMode='tail'
+       >{getText(postList[0].excerpt.rendered)}</Text>
            
             </>
             
