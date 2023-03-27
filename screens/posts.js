@@ -1,4 +1,4 @@
-import React,{useEffect,useState} from 'react';
+import React,{useEffect,useState,useRef} from 'react';
 
 import {
   SafeAreaView,
@@ -29,17 +29,14 @@ const Posts= (props,{navigation}) => {
 
     useEffect(()=>{
          getPosts();
-        
-         
-         
     },[postId]);
+
     useEffect(()=>{
          if(postList.length >0){
-          
         _start();
         _end();
          }
-    })
+    },[postList.length])
 
 
     handleBackButtonClick= () => {
@@ -97,11 +94,26 @@ const Posts= (props,{navigation}) => {
         ]).start();
     
       };
+      const defaultFontSize=20;
+      const [fontSize, setfontSize]=useState(20);
+      
+      const increaseSize=()=>{
+        if(fontSize<=30)
+        {
+          setfontSize(fontSize+1);
+        }
+      }
+      const decreaseFont=()=>{
+        if(fontSize>=defaultFontSize)
+        {
+          setfontSize(fontSize-1);
+        }
+      }
 
     return (<>
     <SafeAreaView style={styles.cardViewOverAll}>
             <View style={{backgroundColor:"#cfc19f"}}>
-              <Postsheader navigation={props.navigation}/>
+              <Postsheader navigation={props.navigation} increaseFont={increaseSize} decreaseFont={decreaseFont}/>
               
             {
             (postList.length>0) ?( 
@@ -130,8 +142,8 @@ const Posts= (props,{navigation}) => {
               >
                 
                     <ScrollView contentInsetAdjustmentBehavior="automatic">
-                        <PostsPictureComponent postId={15} subTitle={postList[0].excerpt.rendered} title={postList[0].title.rendered} imageUrl={postList[0].better_featured_image.media_details.sizes.large.source_url} />
-                        <PostsContentComponent content={postList[0].content.rendered} />
+                        <PostsPictureComponent postId={15} subTitle={postList[0].excerpt.rendered} fontSize={fontSize} title={postList[0].title.rendered} imageUrl={postList[0].better_featured_image.media_details.sizes.large.source_url} />
+                        <PostsContentComponent content={postList[0].content.rendered} fontSize={fontSize}/>
                     </ScrollView>
                    
                 

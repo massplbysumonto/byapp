@@ -3,13 +3,7 @@ import { View,Text,StyleSheet,TextInput,TouchableWithoutFeedback } from "react-n
 
 function ProfileManagement({props}){
    
-    const resetGame=(e)=>{
-        setGameState(1);
-      }
-      const about=(e)=>{
-        alert("about game");
-    
-      }
+   
     return (
         <>
         

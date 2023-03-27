@@ -19,7 +19,7 @@ function onLoading(value)
       whiteSpace: 'normal',
       color: 'black',
       backgroudColor:'#F2D997',
-      fontSize: 20,
+      fontSize: props.fontSize,
     },
     a: {
       color: 'green'
