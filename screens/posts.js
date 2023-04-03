@@ -143,7 +143,7 @@ const Posts= (props,{navigation}) => {
                 
                     <ScrollView contentInsetAdjustmentBehavior="automatic">
                         <PostsPictureComponent postId={15} subTitle={postList[0].excerpt.rendered} fontSize={fontSize} title={postList[0].title.rendered} imageUrl={postList[0].better_featured_image.media_details.sizes.large.source_url} />
-                        <PostsContentComponent content={postList[0].content.rendered} fontSize={fontSize}/>
+                        <PostsContentComponent subTitle={postList[0].excerpt.rendered} title={postList[0].title.rendered} content={postList[0].content.rendered} fontSize={fontSize}/>
                     </ScrollView>
                    
                 
@@ -184,7 +184,7 @@ const Posts= (props,{navigation}) => {
         }
         
           </View>
-           <View style={{width:"100%",height:"40%",backgroundColor:"green"}}></View>
+           <View style={{width:"100%",height:"40%",backgroundColor:"#cfc19f"}}></View>
            </SafeAreaView>
     
     </>);

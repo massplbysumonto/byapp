@@ -632,56 +632,16 @@ const getPosts=(e)=>{
 
   return (
     <>
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor:"#cfc19f",}}>
     <Hamburger navigation={navigation} resetFunction={resetGame} infoFunction={about} style={styles.hamburgerPosition} />
 
     <View style={styles.container} >
     
     <Animated.View style={styles.gameContainer}>
-       
         <GestureHandlerRootView>
-        
-           {/* <PinchGestureHandler 
-           onGestureEvent={onGestureEvent}
-          onHandlerStateChange={onPinchStateChange}
-          onActivated={()=>{
-            // console.log("hello world")
-            setPinchState(true)
-          }}
-          onEnded={()=>{
-            // console.log("hello world")
-            setPinchState(false)
-          }}
-
-          onBegan={()=>{
-            setPinchState(true)
-          }}
-
-          onCancelled={()=>{
-            // console.log("hello world")
-            setPinchState(false)
-          }}
-
-          onFailed={()=>{
-            // console.log("hello world")
-            setPinchState(false)
-          }}
-          > */}
           <Pinchable>
         <View style={{flex:1,width:380,height:380}}>
-          {/* <PanGestureHandler onGestureEvent={handlePanGesture} onHandlerStateChange={onHandlerPanStateChange}
-         
-         >
-         <Animated.View
-         style={{
-           transform: [{
-             translateY : translateY
-         },
-         {
-             translateX : translateX
-         }]
-         }}
-         > */}
+          {/* <View> */}
         <TapGestureHandler
           numberOfTaps={2}
           onActivated={(e) => (
@@ -689,10 +649,7 @@ const getPosts=(e)=>{
         )}>
           <Image source={require('../assets/game/board.jpg')} style={{flex:1,width:380,height:380}} />
         </TapGestureHandler>
-        {/* </Animated.View>
-        </PanGestureHandler> */}
          </View>
-        {/* </PinchGestureHandler> */}
         </Pinchable>
         
         </GestureHandlerRootView>
@@ -753,7 +710,7 @@ const getPosts=(e)=>{
     
    </View>
 
-   <View style={{ marginTop:'80%',width:"100%", height:"50%",justifyContent:'flex-end',backgroundColor: 'rgba(255, 255, 255, 1)'}} >
+   <View style={{ marginTop:'70%',width:"100%", height:"50%",justifyContent:'flex-end',backgroundColor: 'rgba(255, 255, 255, 1)',backgroundColor:"#cfc19f",}} >
    <BlockInformation ref={cellInfo} excerpt={excerpt} postId={postIdCellMovement.current} navigation={navigation} />        
    </View>
    </SafeAreaView>
@@ -767,15 +724,16 @@ const styles = StyleSheet.create({
     alignContent:'center',
     justifyContent:'center',
     position:'absolute',
-    marginTop:'30%',
+    marginTop:'10%',
     zIndex:1
     
   },
   gameContainer:{
     alignContent:'center',
+    // justifyContent:'center',
     width:"100%",
-    height:"90%",
-    marginLeft:"1.5%",
+    height:"80%",
+    marginLeft:"3.8%",
     zIndex:2
   },
   CircleShape: {

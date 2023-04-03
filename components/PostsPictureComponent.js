@@ -41,12 +41,12 @@ function onLoading(value)
     {
 		<Card.Cover style={imageLoad?{display:'none'}:{}}source={{ uri: props.imageUrl }} onLoadStart={() => onLoading(true)} onLoadEnd={()=>onLoading(false)}  />}
 	<Card.Content>
-  <RenderHtml
+  {/* <RenderHtml
       source={{
         html: props.subTitle
       }}
       tagsStyles={tagsStyles}
-    />
+    /> */}
 		</Card.Content>
 	</Card>
   </>
@@ -57,7 +57,9 @@ export default PostsPictureComponent;
 const Styles = StyleSheet.create({
 	container :{
 		alignContent:'center',
-		marginVertical:40,
+		// marginVertical:40,
+    marginTop:40,
+    marginBottom:20,
     marginHorizontal: 10,
     padding:10,
     backgroundColor:'#F2D997'

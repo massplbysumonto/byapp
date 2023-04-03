@@ -6,7 +6,7 @@ import RenderHtml from 'react-native-render-html';
 
 
 const BlockInformation = ({excerpt,quote,postId,navigation}) => {
-    // console.log(excerpt);
+    console.log(excerpt);
     // console.log(postId);
     const [isRotating, setRotation] = useState(true);
     const [lengthValueHolder,setlengthValueHolder] =useState(new Animated.Value(isRotating ? 0 : 1));
@@ -27,8 +27,7 @@ const BlockInformation = ({excerpt,quote,postId,navigation}) => {
    },[postId]);
 
    function getText(html){
-    
-    return html.replace(/<[^>]+>/g, '');;
+    return html.replace(/<[^>]+>/g, '');
 }
 
    const tagsStyles = {
@@ -86,7 +85,7 @@ const BlockInformation = ({excerpt,quote,postId,navigation}) => {
 
     const lengthData = lengthValueHolder.interpolate({
         inputRange: [0,1],
-        outputRange: ['20%','50%']
+        outputRange: ['15%','30%']
     });
 
     const zIndex = lengthValueHolder.interpolate({
