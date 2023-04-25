@@ -1,12 +1,12 @@
 import React,{useState,useEffect} from "react";
-import { Animated,View,Text, TouchableWithoutFeedback ,Easing,TouchableOpacity,ScrollView} from "react-native";
+import { Animated,View,Text, TouchableWithoutFeedback ,Easing,TouchableOpacity,ScrollView,Image} from "react-native";
 import { forwardRef } from "react";
 import {WP_URL_POST}  from '@env';
 import RenderHtml from 'react-native-render-html';
 
 
 const BlockInformation = ({excerpt,quote,postId,navigation}) => {
-    console.log(excerpt);
+    // console.log(excerpt);
     // console.log(postId);
     const [isRotating, setRotation] = useState(true);
     const [lengthValueHolder,setlengthValueHolder] =useState(new Animated.Value(isRotating ? 0 : 1));
@@ -85,7 +85,7 @@ const BlockInformation = ({excerpt,quote,postId,navigation}) => {
 
     const lengthData = lengthValueHolder.interpolate({
         inputRange: [0,1],
-        outputRange: ['15%','30%']
+        outputRange: ['70%','140%']
     });
 
     const zIndex = lengthValueHolder.interpolate({
@@ -102,13 +102,19 @@ const BlockInformation = ({excerpt,quote,postId,navigation}) => {
     }
 
 return(
-    
-    <TouchableWithoutFeedback onPress={()=>checkOnPress()}>
+    <>
+    {/* <View style={{alignContent: 'center',flex:1}}> */}
+    <TouchableWithoutFeedback onPress={()=>checkOnPress()}> 
+    <Image source={require('../assets/other/up.png')} style={{width:40,height:40,zIndex: 1, top:10}}/>
+
+    </TouchableWithoutFeedback>
+    {/* </View> */}
         
-    <Animated.View style={[{width:"100%", backgroundColor:"#b79972",borderTopLeftRadius: 15,borderTopRightRadius: 15,borderColor:"black"},viewLengthStyle]}>
+    <Animated.View style={[{width:"100%", backgroundColor:"#b79972",borderTopLeftRadius: 15,borderTopRightRadius: 15,borderColor:"black",paddingVertical:10},viewLengthStyle]}>
     
     {(postList.length>0 && isRotating==false)?(
         <>
+        <ScrollView>
              <TouchableWithoutFeedback onPress={()=>changePage()}>
             <Text style={{alignContent:'center',paddingHorizontal:"5%",paddingTop:"1%",alignSelf:"center"}}>
                 click here know more
@@ -125,6 +131,8 @@ return(
                 numberOfLines={2}
             /> */}
 
+            
+
             <Text style={{alignContent:'center',paddingHorizontal:"5%",paddingTop:"1%",color: 'black',
         backgroudColor:'#F2D997',
         fontSize: 13,
@@ -132,9 +140,9 @@ return(
         alignContent:"center",
         alignSelf:"center",
        adjustsFontSizeToFit:true}}
-       numberOfLines={4} ellipsizeMode='tail'
+        ellipsizeMode='tail'
        >{getText(postList[0].excerpt.rendered)}</Text>
-           
+           </ScrollView>
             </>
             
         ):(<Text style={{alignContent:'center',paddingHorizontal:"5%",paddingTop:"1%",color: 'black',
@@ -148,8 +156,8 @@ return(
         </Text>)}
         
     </Animated.View>
+    </>
     
-    </TouchableWithoutFeedback>
 )
 function changePage ()
 {

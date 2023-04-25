@@ -9,7 +9,7 @@ import {
   Card,
   ScrollView,
   Animated,
-  TouchableOpacity,TouchableWithoutFeedback
+  TouchableOpacity,TouchableWithoutFeedback,Share
 } from 'react-native';
 
 import PostsPictureComponent from '../components/PostsPictureComponent';
@@ -17,6 +17,7 @@ import PostsContentComponent from '../components/PostsContentComponent';
 import {WP_URL_POST}  from '@env';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Postsheader from '../components/postsheader';
+import FloatingFont from '../components/floatingFontsize';
 import BlockInformation from '../components/blockInformation';
 
 
@@ -63,7 +64,6 @@ const Posts= (props,{navigation}) => {
        
       }    
       const _start = async () => {
-        console.log("hello")
         return Animated.parallel([
           Animated.timing(slideUpValue, {
     
@@ -110,10 +110,33 @@ const Posts= (props,{navigation}) => {
         }
       }
 
+      const sharePost=async()=>{
+        try {
+          console.log(postList[0].link);
+          const result = await Share.share({
+            message: postList!=null?+postList[0].link:"https://buddhiyoga.in/site/en/",
+            url: postList!=null?postList[0].link:"https://buddhiyoga.in/site/en/",
+            title: 'BuddhiYoga',
+
+          },
+          {
+            dialogTitle:'BuddhiYoga'
+          });
+          if (result.action === Share.sharedAction) {
+            console.log('Shared successfully');
+          } else if (result.action === Share.dismissedAction) {
+            console.log('Sharing cancelled');
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+      }
+
     return (<>
     <SafeAreaView style={styles.cardViewOverAll}>
             <View style={{backgroundColor:"#cfc19f"}}>
-              <Postsheader navigation={props.navigation} increaseFont={increaseSize} decreaseFont={decreaseFont}/>
+              <Postsheader navigation={props.navigation} increaseFont={increaseSize} decreaseFont={decreaseFont} postID={postId}/>
+              <FloatingFont increaseFont={increaseSize} decreaseFont={decreaseFont} sharePost={sharePost} postID={postId} />
               
             {
             (postList.length>0) ?( 

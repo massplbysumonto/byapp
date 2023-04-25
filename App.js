@@ -19,7 +19,7 @@ import { Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Profile from './screens/profile';
 import Aboutus from './screens/aboutus';
- 
+ import Comment from './components/comment';
 
 const App = (props)=> {
   const Stack = createNativeStackNavigator();
@@ -85,6 +85,7 @@ const App = (props)=> {
         />
         <Stack.Screen name="Game" component={DrawerRoutes} />
         <Stack.Screen name="Posts" component={Posts} />
+        <Stack.Screen name="Comment" component={Comment} />
       </Stack.Navigator>
     </NavigationContainer>
     </>
