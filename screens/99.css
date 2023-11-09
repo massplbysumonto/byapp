@@ -1,0 +1,140 @@
+.safeAreaView{
+    background-color: '#f7c894';
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.gameView{
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+    /* display: flex; */
+    /* height: 65.25%; */
+   
+}
+.imageView{
+    width: 100%;
+    overflow: hidden;
+    height: 100%;
+    /* background-color: aqua; */
+    margin: 0 auto;
+    padding: 0;
+}
+.imageViewL{
+    width: 100%;
+    overflow: hidden;
+    height: 100%;
+    /* background-color: aqua; */
+    margin: 0 auto;
+    padding: 0;
+}
+.gameContainer{
+    width: 100%;
+    /* background-color: red; */
+    height: 90%;
+    margin-left: 0%;
+    margin-right: 0%;
+    z-index: 2;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0;
+}
+.subgameContainer{
+    width: 95%;
+    height: 100%;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    margin: 0 auto;
+    /* background-color: blue; */
+}
+.subgameContainerL{
+    width: 95%;
+    height: 100%;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    margin: 0 auto;
+    /* background-color: blue; */
+}
+.zoomableView{
+    /* padding-top: 42px; */
+}
+.imageStyle{
+    width: 100%;
+    height: auto;
+    z-index: -1;
+}
+.tokenView{
+    align-content: center;
+    justify-content: center;
+    width:38.5px;
+    height:33.9px;
+    bottom:38px;
+    left:15.5px;
+    position: absolute;
+    
+}
+.tokenViewL{
+    align-content: center;
+    justify-content: center;
+    width:49.28px;
+    height:44.78px;
+    /* background-color: blue; */
+    bottom:50px;
+    left:35px;
+    position: absolute;
+    
+}
+.token{
+    width: 31px;
+    height: 16px;
+}
+.tokenL{
+    width: 39.68px;
+    height: 21.92px;
+}
+.diceView{
+    /* background-color: yellow; */
+
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    bottom: 1%;
+    height: 7%;
+    z-index: 1;
+    position: absolute;
+    right: 5%;
+    padding: 0px;
+}
+.diceViewL{
+    /* background-color: yellow; */
+
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    bottom: 1.2%;
+    height: 7%;
+    z-index: 1;
+    position: absolute;
+    right: 12%;
+    padding: 0px;
+}
+.diceAnimatedView{
+    width: 35px;
+    height: 35px;
+    border-radius: 10px;
+}
+.diceAnimatedViewL{
+    width: 45px;
+    height: 45px;
+    border-radius: 10px;
+}
+.blockInformationView{
+    margin-top: 0%;
+    width: 100%;
+    height: 15%;
+    justify-content: flex-end;
+    max-height: 25%;
+    z-index: 9;
+}
